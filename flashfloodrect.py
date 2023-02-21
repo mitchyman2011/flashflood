@@ -21,3 +21,4 @@ ls,hs = np.mgrid[slice(0.1,5,0.1),
 
 us = u(np.pi/9,ls,hs,0.02)
 print(us)
+k=1
