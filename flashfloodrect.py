@@ -9,16 +9,27 @@ from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 g = 9.81
 
-def u(alpha,l,h,f):
-    A = l*h
-    L= l+2*h
-    u = np.sqrt(A*g*np.sin(alpha)/(f*L))
-    return u 
+def u(alpha,l,A,f):
+   """
+    This function returns the average speed of the river, this aproximation
+    is used because turbulent flow is allmost uniform on large scales
 
+            Parameters:
+                    alpha (float): Angle of the fiver with respect to gravity
+                    l (func): it is a length as a function of the area
+                    A (func): The area of the bed
+                    f (float): frictional factor of the bed on the water
+                    g (float): the accleration due to gravity
+            Returns:
+                    binary_sum (str): Binary string of the sum of a and b
+   """
+    u = np.sqrt(A*g*np.sin(alpha)/(f*l(A)))
+    return u
 
-ls,hs = np.mgrid[slice(0.1,5,0.1),
-                 slice(0.1,2,0.1)]
+def fric(
+#ls,hs = np.mgrid[slice(0.1,5,0.1),
+#                slice(0.1,2,0.1)]
 
-us = u(np.pi/9,ls,hs,0.02)
-print(us)
+#us = u(np.pi/9,ls,hs,0.02)
+#print(us)
 
