@@ -16,17 +16,26 @@ def u(alpha,l,A,f):
 
             Parameters:
                     alpha (float): Angle of the fiver with respect to gravity
-                    l (func): it is a length as a function of the area
-                    A (func): The area of the bed
+                    l (float): it is a length as a function of the area
+                    A (float): The area of the bed
                     f (float): frictional factor of the bed on the water
                     g (float): the accleration due to gravity
             Returns:
                     The average velocity of the river
    """
-    u = np.sqrt(A*g*np.sin(alpha)/(f*l(A)))
+    u = np.sqrt(A*g*np.sin(alpha)/(f*l))
     return u
 
-def AreaSquare(s,t):
+def AreaQuad(s,t):
+    """
+    This defines the area of a quadrolatral
+
+            Parameters:
+                    s (float): length along the river
+                    t (float): de time bro
+            Returns:
+                    The area of the quadralateral section
+     """
    return (s**2)*t
 def LengthSquare(A):
     return(np.sqrt(A)*3)
