@@ -9,61 +9,35 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 g = 9.81
+f =0.1
+alpha = np.pi/5
 
-def u(alpha,l,A,f):
-   """
-    This function returns the average speed of the river, this aproximation
-    is used because turbulent flow is allmost uniform on large scales
-            Parameters:
-                    alpha (float): Angle of the fiver with respect to gravity
-                    l (float): it is a length as a function of the area
-                    A (float): The area of the bed
-                    f (float): frictional factor of the bed on the water
-                    g (float): the accleration due to gravity
-            Returns:
-                    The average velocity of the river
-   """
-   u =np.sqrt(A*g*np.sin(alpha)/(f*l))
-   return u
+#Gudunov solution takes form dy_i/dt = -(Q(y_i)-Q(y_(i-1))/dx
+#Q as a function of y for a rectangular river bed
+def Q(t,y,x):
+    return x**(3/2)*y**(3/2)*np.sqrt((np.sin(alpha))/(2*y+x))
 
-def AreaQuad(s,t):
-    
-    """This defines the area of a quadrolatral
-            Parameters:
-                    s (float): length along the river
-                    t (float): de time bro
-            Returns:
-                    The area of the quadralateral section"""
+# f is the RHS of the above commented equation
+def f(t,y,i):
+    return (Q(i-1,y,alpha)-Q(i,y,alpha))
 
-    return (s**2)*t
-def LengthSquare(A):
-    return(np.sqrt(A)*3)
-
-
-def Q(s,alpha):
-    return (5/2)*s**(3/2)*np.sqrt(np.sin(alpha))
-
-def gudunov(N,s,L):
+"""Iterates over a range 0 to N solving the IVP, currently it iterates over some range i but 
+it needs to be a bit more complicated than that, see page 24 of the notes for the correct 
+implementation."""
+def gudunov(N):
     sols = np.zeros(N)
     for i in range(1,N):
-        f = Q(AreaQuad[i-1])-Q(AreaQuad[i])
-        A0 = 0
-        sol = solve_ivp(f,[0,100],A0)
-        sols[i] = sol
+        y0 = [10]
+        sol = solve_ivp(f,[0,10],y0,args=[i])
         i = i+1
+        plt.plot(sol.t,sol.y[0])
     
-    return sol
+    return sols
 
+t=np.arange(100)
+y= np.arange(100)
+x = np.arange(10)
 
-"""def AreaWedge():
-
-def LengthWedge():
-
-def AreaParabola():
-
-def LengthParabola():
-#ls,hs = np.mgrid[slice(0.1,5,0.1),
-#                slice(0.1,2,0.1)]
-
-#us = u(np.pi/9,ls,hs,0.02)
-#print(us)"""
+for i in x:
+    qs = Q(t,y,i)
+    plt.plot(qs)
