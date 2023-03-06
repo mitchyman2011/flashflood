@@ -24,8 +24,8 @@ def AreaQuad(y,x):
     
     """This defines the area of a quadrolatral
             Parameters:
-                    s (float): length along the river
-                    t (float): de time bro
+                    x (float): width of river (assumed constant)
+                    y (float): height of river
             Returns:
                     The area of the quadralateral section"""
     return y*x
@@ -45,7 +45,6 @@ def gudunov(N,s,L):
         sol = solve_ivp(f,[0,100],A0)
         sols[i] = sol
         i = i+1
-    
     return sol
 
 
@@ -55,22 +54,40 @@ def AreaWedge(theta_1,theta_2,y):
 
     Parameters
     ----------
-    theta_1 : TYPE
-        DESCRIPTION.
-    theta_2 : TYPE
-        DESCRIPTION.
-    y : TYPE
-        DESCRIPTION.
+    theta_1 : FLOAT
+        Left incline angle of river bed to perpendicular.
+    theta_2 : FLOAT
+        Right incline angle of river bed to perpendicular.
+    y : FLOAT
+        Height of river.
 
     Returns
     -------
-    TYPE
-        DESCRIPTION.
+    FLOAT
+        Area of a triangular wedge.
 
     """
     return 0.5*(np.tan(theta_1)+np.tan(theta_2))*(y**2)
                 
 def LengthWedge(theta_1,theta_2,y):
+    """
+    This defines the riverbed length of a triangular wedge
+
+    Parameters
+    ----------
+    theta_1 : FLOAT
+        Left incline angle of river bed to perpendicular.
+    theta_2 : FLOAT
+        Right incline angle of river bed to perpendicular.
+    y : FLOAT
+        Height of river.
+
+    Returns
+    -------
+    FLOAT
+        Riverbed of a triangular wedge.
+
+    """
     return y*(np.sqrt(np.tan(theta_1)+1)+np.sqrt(np.tan(theta_2)+1))
 
 def AreaEllipse(r_1, r_2, theta_1, theta_2):
@@ -79,19 +96,19 @@ def AreaEllipse(r_1, r_2, theta_1, theta_2):
 
     Parameters
     ----------
-    r_1 : TYPE
-        DESCRIPTION.
-    r_2 : TYPE
-        DESCRIPTION.
-    theta_1 : TYPE
-        DESCRIPTION.
-    theta_2 : TYPE
-        DESCRIPTION.
+    r_1 : FLOAT
+        Major axis of ellipse.
+    r_2 : FLOAT
+        Minor axis of ellipse.
+    theta_1 : FLOAT
+        Angle between major axis and the height of the river measured from centre of ellipse.
+    theta_2 : FLOAT
+        Angle between the river height measured from centre of ellipse.
 
     Returns
     -------
-    TYPE
-        DESCRIPTION.
+    FLOAT
+        Riverbed of an ellipse.
 
     """
     return 0.5*r_1*r_2*(theta_2-theta_1-np.sin(theta_2-theta_1))
