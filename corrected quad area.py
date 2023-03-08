@@ -44,7 +44,7 @@ def gudunov(N,s,L):
         sol = solve_ivp(f,[0,100],A0)
         sols[i] = sol
         i = i+1
-    
+        plt.plot(sol.t,sol.y[0])
     return sol
 
 
