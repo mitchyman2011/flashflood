@@ -33,7 +33,7 @@ def devfunc(t,y,x,alpha,f,g):
     #print(t)
     for i in range(len(y)):
         if i>0:
-            k[i]=(-Q(y[i],5,alpha)+Q(y[i-1],5,alpha))
+            k[i]=((g/f)**(1/2))*(-Q(y[i],5,alpha)+Q(y[i-1],5,alpha))
         else:
             k[i]=0
     #print(k[500],y[500])
@@ -41,13 +41,14 @@ def devfunc(t,y,x,alpha,f,g):
 l=50# the amount of volume elements 
 y0=np.ones(l)#seting itnial values
 g=9.81# accleration due to gravity
-f=0.1# frictional factor
-x=np.linspace(1,10,l)#holds the guess of the points down the river
+f=0.01# frictional factor
+x=np.linspace(0,2,l)#holds the guess of the points down the river
 y0[0]=3#setting inita left hand side
-t=np.linspace(0,15,100)#time evaluation
-alpha=np.pi/4#angle
-sol=scipy.integrate.solve_ivp(devfunc,[0,15],y0,t_eval=t,args=[x,alpha,f,g])
+t=np.linspace(0,0.5,100)#time evaluation
+alpha=np.pi/10#angle
+sol=scipy.integrate.solve_ivp(devfunc,[0,15],y0,t_eval=t,args=[x,alpha,f,g])#integrating
 for i in range(len(sol.y[-1])):
    for j in range(len(x)):
-      plt.scatter(x[j],sol.y[j][i],c='b')
+      plt.scatter(x[j],sol.y[j][i],c='b')#ploting the length along the river agunst the hight
+   plt.title(f't={t[i]}')
    plt.show()
