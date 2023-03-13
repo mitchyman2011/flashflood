@@ -43,22 +43,22 @@ def devfunc(t,y):
     k=np.zeros(len(y))
     #print(t)
     for i in range(len(y)):
-        if i>0:
+        if i>=0:
             k[i]=((g/f)**(1/2))*(-Q(y[i],5,alpha)+Q(y[i-1],5,alpha))
         else:
             k[i]=0
     #print(k[500],y[500])
     return k
 
+xmin = -2
+xmax =15
 
-xmax =4
 
-
-l=200# the amount of volume elements 
+l=800# the amount of volume elements 
 y0=np.ones(l)#seting itnial values
 g=9.81# accleration due to gravity
 f=0.01# frictional factor
-x=np.linspace(0,xmax,l)#holds the guess of the points down the river
+x=np.linspace(xmin,xmax,l)#holds the guess of the points down the river
 
 
 #for a in range(0, 10):
@@ -68,14 +68,21 @@ x=np.linspace(0,xmax,l)#holds the guess of the points down the river
 #    '''
 #    y0[a] = 1 + (10-a)/50
     
-  
-y0=np.exp(-x**2)
+
+#for a in range(0, l):
+
+inlet_condition = 0.1
+    
+y0=np.exp(-(x)**2) + inlet_condition
+#print(y0)
 
 
-
-t=np.linspace(0,2,100)#time evaluation
+t=np.linspace(0, 6, 100)#time evaluation
 alpha=np.pi/10#angle
 sol= solve_ivp(devfunc,[0,15],y0,t_eval=t,args=[x,alpha,f,g])#integrating
+
+
+
 
 def update2d(frame, ax, line, xdata, ydata, tdata, anim=False):
     if line is None:
@@ -84,16 +91,26 @@ def update2d(frame, ax, line, xdata, ydata, tdata, anim=False):
     ax.set_title(f"time={tdata[frame]:.3f}")
     return line,
 
+
 N = len(t)
 y=sol.y
 y = y.transpose()
 
+
+
+
+
+
+
+'''
+PLOTS
+'''
 fig, ax = plt.subplots()
 ax.set_xlabel("x")
-ax.set_xlim([0,xmax])
+ax.set_xlim([xmin,xmax])
 
 ax.set_ylabel("height")
-ax.set_ylim([0,2])
+ax.set_ylim([0,2.5])
 
 line, = update2d(0, ax, None, x, y, t, True)
 update_anim = functools.partial(update2d, ax=ax, line=line, 
