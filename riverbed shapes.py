@@ -34,8 +34,8 @@ def LengthSquare(A,x):
     return(2*A/x+x)
 
 
-def Q(s,alpha):
-    return (5/2)*s**(3/2)*np.sqrt(np.sin(alpha))
+def Q(A,alpha):
+    return (5/2)*A**(3/2)*np.sqrt(np.sin(alpha))
 
 def gudunov(N,s,L):
     sols = np.zeros(N)
