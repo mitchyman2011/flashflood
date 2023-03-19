@@ -53,6 +53,7 @@ def devfunc(t,y):
         else:
             k[i]=0
     #print(k[500],y[500])
+    print(max(k))
     return k
 
 xmin = 0
