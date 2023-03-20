@@ -48,12 +48,12 @@ def devfunc(t,y):
     k=np.zeros(len(y))
     #print(t)
     for i in range(len(y)):
-        if i>=0:
+        if i>0:
             k[i]=((g/f)**(1/2))*(-Q(y[i],5,alpha)+Q(y[i-1],5,alpha))
         else:
             k[i]=0
     #print(k[500],y[500])
-    print(max(k))
+    
     return k
 
 xmin = 0
@@ -79,12 +79,12 @@ s=np.linspace(xmin,xmax,l)#holds the guess of the points down the river
 
 inlet_condition = 0.1
 D= 1
-    
-y0=  D*np.exp(-(s)**2) + inlet_condition
+k=0.5
+y0=  D*np.exp(-(k*s)**2) + inlet_condition
 #print(y0)
 
 
-t=np.linspace(0, 6, 100)#time evaluation
+t=np.linspace(0, 6, 101)#time evaluation
 alpha=np.pi/10#angle
 x=2
 sol= solve_ivp(devfunc,[0,15],y0,t_eval=t) #,args=[x,alpha,f,g])#integrating
@@ -125,3 +125,8 @@ update_anim = functools.partial(update2d, ax=ax, line=line,
                                 xdata=s, ydata=y, tdata=t, anim=True)
 ani = animation.FuncAnimation(fig, update_anim, N, interval=25, blit=False)
 ani.save('test.gif')
+for i in range(len(sol.y[-1])):
+    if i % 10==0:
+        print(i)
+        plt.plot(s,sol.y[:,i])
+plt.show()
