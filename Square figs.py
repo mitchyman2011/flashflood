@@ -130,10 +130,7 @@ mx_space = np.zeros(100)
 for d in range(0, 100):
     mx_area[d] = np.amax(y[d])
     mx_space[d] = np.argmax(y[d])*17/800 -2
-    
-    ppp = find_nearest(y[d], 0.09)
-    print(ppp)
- 
+
     
     
 print(mx_area)
