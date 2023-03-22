@@ -49,22 +49,23 @@ def devfunc(t,y):
     #print(t)
     for i in range(len(y)):
         if i>0:
-            k[i]=((g/f)**(1/2))*(-Q(y[i],5,alpha)+Q(y[i-1],5,alpha))
+            k[i]=((g/f)**(1/2))*(-Q(y[i],2,alpha)+Q(y[i-1],2,alpha))
         else:
             k[i]=0
     #print(k[500],y[500])
     
     return k
+jeff=np.linspace(0.01,0.1,10)
+for f in jeff:
+    xmin = 0
+    xmax =15
+    f=round(f,3)
 
-xmin = 0
-xmax =15
-
-
-l=800# the amount of volume elements 
-y0=np.ones(l)#seting itnial values
-g=9.81# accleration due to gravity
-f=0.01# frictional factor
-s=np.linspace(xmin,xmax,l)#holds the guess of the points down the river
+    l=800# the amount of volume elements 
+    y0=np.ones(l)#seting itnial values
+    g=9.81# accleration due to gravity
+#f=0.01# frictional factor
+    s=np.linspace(xmin,xmax,l)#holds the guess of the points down the river
 
 
 #for a in range(0, 10):
@@ -77,56 +78,57 @@ s=np.linspace(xmin,xmax,l)#holds the guess of the points down the river
 
 #for a in range(0, l):
 
-inlet_condition = 0.1
-D= 1
-k=0.5
-y0=  D*np.exp(-(k*s)**2) + inlet_condition
+    inlet_condition = 0.1
+    D= 1
+    k=1
+    y0=  D*np.exp(-(k*s)**2) + inlet_condition
 #print(y0)
+    
+   # print(1000*f)
+    t=np.linspace(0, 30, 101)#time evaluation
+    alpha=np.pi/12#angle
+    x=2
+    sol= solve_ivp(devfunc,[0,30],y0,t_eval=t) #,args=[x,alpha,f,g])#integrating
 
 
-t=np.linspace(0, 6, 101)#time evaluation
-alpha=np.pi/10#angle
-x=2
-sol= solve_ivp(devfunc,[0,15],y0,t_eval=t) #,args=[x,alpha,f,g])#integrating
+    N = len(t)
+    y=sol.y
+    y = y.transpose()
 
 
 
 
+
+
+
+    fig, ax = plt.subplots()
+    ax.set_xlabel("x")
+    ax.set_xlim([xmin,xmax])
+
+    ax.set_ylabel("Area")
+    ax.set_ylim([0,2.5])
+
+#line, = update2d(0, ax, None, s, y, t, True)
+#update_anim = functools.partial(update2d, ax=ax, line=line, 
+#                                xdata=s, ydata=y, tdata=t, anim=True)
+#ani = animation.FuncAnimation(fig, update_anim, N, interval=25, blit=False)
+#ani.save('test.gif')
+    for i in range(len(sol.y[-1])):
+        if i % 10==0:
+            #print(i)
+            b=sol.t[i]
+            plt.plot(s,sol.y[:,i],label=f"t={b}")
+    plt.ylabel("Area")
+    plt.xlabel("s")
+    plt.title(f"The wave progressing over time with frictional factor $f={f}$")
+    plt.legend(ncol=3,loc=1)
+    plt.savefig(f'data/frictionalfactor={f}.jpg')
+   
 def update2d(frame, ax, line, xdata, ydata, tdata, anim=False):
     if line is None:
         line, = ax.plot(xdata, ydata[frame, :])
     line.set_data(xdata, ydata[frame, :])
-    ax.set_title(f"time={tdata[frame]:.3f}")
+    ax.set_title(f"data/time={tdata[frame]:.3f}")
     return line,
 
 
-N = len(t)
-y=sol.y
-y = y.transpose()
-
-
-
-
-
-
-
-'''
-PLOTS
-'''
-fig, ax = plt.subplots()
-ax.set_xlabel("x")
-ax.set_xlim([xmin,xmax])
-
-ax.set_ylabel("Area")
-ax.set_ylim([0,2.5])
-
-line, = update2d(0, ax, None, s, y, t, True)
-update_anim = functools.partial(update2d, ax=ax, line=line, 
-                                xdata=s, ydata=y, tdata=t, anim=True)
-ani = animation.FuncAnimation(fig, update_anim, N, interval=25, blit=False)
-ani.save('test.gif')
-for i in range(len(sol.y[-1])):
-    if i % 10==0:
-        print(i)
-        plt.plot(s,sol.y[:,i])
-plt.show()

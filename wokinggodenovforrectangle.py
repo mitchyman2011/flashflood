@@ -38,7 +38,7 @@ def devfunc(t,y,x,alpha,f,g):
             k[i]=0
     #print(k[500],y[500])
     return k
-l=100# the amount of volume elements 
+l=800# the amount of volume elements 
 y0=np.ones(l)#seting itnial values
 g=9.81# accleration due to gravity
 f=0.1# frictional factor

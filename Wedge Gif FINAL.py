@@ -104,69 +104,68 @@ def devfunc(t,y):
     return k
 
 
-
-xmin = 0
-xmax =15
-
-
-l =800# the amount of volume elements 
-y0 =np.ones(l)#seting itnial values
-g =9.81# accleration due to gravity
-f =0.01# frictional factor
-x =np.linspace(xmin,xmax,l)#holds the guess of the points down the river
-
-
-
-
-
-
-
-#for a in range(0, l):
-
-inlet_condition = 0.1
-D= 1
+jeff=np.linspace(0.001,0.01,10)
+for f in jeff:
+    xmin = 0
+    xmax =15
     
-y0=  D*np.exp(-(x)**2) + inlet_condition
-#print(y0)
-
-
-t=np.linspace(0, 6, 100)#time evaluation
-alpha=np.pi/10#angle
-sol= solve_ivp(devfunc,[0,15],y0,t_eval=t)#,args=[x,alpha,f,g])#integrating
-
-
-
-
+    f=round(f,3)
+    l =800# the amount of volume elements 
+    y0 =np.ones(l)#seting itnial values
+    g =9.81# accleration due to gravity
+    #f =0.001# frictional factor
+    x =np.linspace(xmin,xmax,l)#holds the guess of the points down the river
+    
+    
+    
+    
+    
+    
+    
+    #for a in range(0, l):
+    
+    inlet_condition = 0.1
+    D= 1
+    k=1    
+    y0=  D*np.exp(-(k*x)**2) + inlet_condition
+    #print(y0)
+    
+    
+    t=np.linspace(0, 5, 101)#time evaluation
+    alpha=np.pi/12#angle
+    sol= solve_ivp(devfunc,[0,15],y0,t_eval=t)#,args=[x,alpha,f,g])#integrating
+    s =np.linspace(xmin,xmax,l)
+    
+    
+    
+   
+    
+    
+    N = len(t)
+    y=sol.y
+    y = y.transpose()
+    
+    
+    
+    
+    for i in range(len(sol.y[-1])):
+        if i % 10==0:
+            print(i)
+            b=sol.t[i]
+            plt.plot(s,sol.y[:,i],label=f"t={b}")
+    plt.ylabel("Area")
+    plt.xlabel("s")
+    plt.legend(ncol=3,loc=1)
+    plt.ylim([0,2.5])
+    plt.title(f"The wave progressing over time with frictional factor $f={f}$")
+    plt.savefig(f'data/frictionalfactorw={f}.jpg')
+    plt.show()
 def update2d(frame, ax, line, xdata, ydata, tdata, anim=False):
-    if line is None:
-        line, = ax.plot(xdata, ydata[frame, :])
-    line.set_data(xdata, ydata[frame, :])
-    ax.set_title(f"time={tdata[frame]:.3f}")
-    return line,
-
-
-N = len(t)
-y=sol.y
-y = y.transpose()
-
-
-
-
-
-
-
+     if line is None:
+         line, = ax.plot(xdata, ydata[frame, :])
+     line.set_data(xdata, ydata[frame, :])
+     ax.set_title(f"time={tdata[frame]:.3f}")
+     return line,
 '''
 PLOTS
 '''
-fig, ax = plt.subplots()
-ax.set_xlabel("x")
-ax.set_xlim([xmin,xmax])
-
-ax.set_ylabel("area")
-ax.set_ylim([0,2.5])
-
-line, = update2d(0, ax, None, x, y, t, True)
-update_anim = functools.partial(update2d, ax=ax, line=line, 
-                                xdata=x, ydata=y, tdata=t, anim=True)
-ani = animation.FuncAnimation(fig, update_anim, N, interval=25, blit=False)
-ani.save('test.gif')
