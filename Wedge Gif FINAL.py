@@ -96,7 +96,7 @@ def devfunc(t,y):
     k=np.zeros(len(y))
     #print(t)
     for i in range(len(y)):
-        if i>0:
+        if i>=0:
             k[i]=((g/f)**(1/2))*(-Q(y[i],5,alpha)+Q(y[i-1],5,alpha))
         else:
             k[i]=0
